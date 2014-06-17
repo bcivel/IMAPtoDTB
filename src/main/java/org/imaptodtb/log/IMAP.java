@@ -78,17 +78,15 @@ public class IMAP {
          */
         retourMsg.append("line 78\n");
 
-            SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM d HH:mm:ss z yyyy", Locale.FRANCE);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM d HH:mm:ss z yyyy", Locale.UK);
         Emails emails = emailService.getLastMessage();
+        cal.setTime(dateFormat.parse(emails.getSendDate()));
+        cal.add(Calendar.HOUR, +1);
 
         retourMsg.append("line 83\n");
 
-        retourMsg.append("DateMail=").append(emails.getSendDate()).append("\n");
-        retourMsg.append("Time=").append(emails.getSendDate()).append("\n");
-
-        retourMsg.append("Time=").append(dateFormat.parse(emails.getSendDate()).getTime()).append("\n");
-
-        SentDateTerm sentDateTerm = new SentDateTerm(SentDateTerm.GT, dateFormat.parse(emails.getSendDate()));
+        retourMsg.append("DateMail=").append(cal.getTime()).append("\n");
+        SentDateTerm sentDateTerm = new SentDateTerm(SentDateTerm.GT, cal.getTime());
 
         if (sentDateTerm == null) {
             retourMsg.append("ERROR sentDateTerm NULL !!\n");
