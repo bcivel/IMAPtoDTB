@@ -23,18 +23,19 @@ public class IMAP {
     @Autowired
     IEmailsService emailService;
 
-    public void test() throws Exception {
+    public String test() throws Exception {
 
         String host = "mymail.pprgroup.net";
         String user = "preveclient@siege.red";
         String password = "Laredoute2014";
+        StringBuilder retourMsg = new StringBuilder();
 
         Date today = new Date();
         Calendar cal = Calendar.getInstance();
         cal.setTime(today);
         cal.add(Calendar.HOUR, -24);
         Date yesterday = cal.getTime();
-        System.out.print("Date = " + yesterday);
+        retourMsg.append("Date = " + yesterday);
          // Getting now.
 
         IMAPFolder folder = null;
@@ -126,5 +127,6 @@ public class IMAP {
         folder.close(true);
         store.close();
 
+        return retourMsg.toString();
     }
 }

@@ -41,7 +41,7 @@ public class TestPop extends HttpServlet {
             ApplicationContext appContext = WebApplicationContextUtils.getWebApplicationContext(this.getServletContext());
             IMAP sample = appContext.getBean(IMAP.class);
 
-            sample.test();
+            out.println(sample.test());
                     
         } finally {
             out.close();
