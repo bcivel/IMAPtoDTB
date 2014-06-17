@@ -7,15 +7,17 @@ package org.imaptodtb.log;
 
 // Import the Commons/Net classes
 import com.sun.mail.imap.IMAPFolder;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
-import org.springframework.stereotype.Service;
 import java.util.*;
 import javax.mail.*;
 import javax.mail.internet.*;
+import javax.mail.search.BodyTerm;
 import javax.mail.search.SentDateTerm;
 import org.imaptodtb.entity.Emails;
 import org.imaptodtb.service.IEmailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class IMAP {
@@ -23,11 +25,83 @@ public class IMAP {
     @Autowired
     IEmailsService emailService;
 
+    private final String host = "mymail.pprgroup.net";
+    private final String user = "preveclient@siege.red";
+    private final String password = "Laredoute2014";
+
+    public String retrieveMailFromSearch(String search)
+            throws Exception {
+        StringBuilder retourMsg = new StringBuilder();
+
+        IMAPFolder folder = null;
+        Store store = null;
+
+        // Get system properties
+        Properties props = System.getProperties();
+        props.setProperty("mail.store.protocol", "imaps");
+
+        retourMsg.append("line 51\n");
+
+        Session session = Session.getDefaultInstance(props, null);
+
+        // Get a Store object that implements the specified protocol.
+        store = session.getStore("imaps");
+
+        //Connect to the current host using the specified username and password.
+        store.connect(host, user, password);
+
+        retourMsg.append("line 61\n");
+
+        //Create a Folder object corresponding to the given name.
+        folder = (IMAPFolder) store.getFolder("Inbox/Commande");
+
+        retourMsg.append("line 66\n");
+
+        // Open the Folder.
+        folder.open(Folder.READ_ONLY);
+
+        /*
+         int messageCount = folder.getMessageCount();
+         retourMsg.append("Total Messages:- " + messageCount);
+         // Get the messages from the server
+         Message[] messages = folder.getMessages();
+         */
+        retourMsg.append("line 78\n");
+
+        BodyTerm bodyTerm = new BodyTerm(search);
+
+        Message[] messages = folder.search(bodyTerm);
+
+        retourMsg.append("line 91\n");
+
+        if (messages == null || messages.length <= 0) {
+            retourMsg.append("Total new Messages: " + messages.length);
+        } else {
+            retourMsg.append("No new Messages !");
+
+            Emails email = new Emails();
+            // Display message.
+            for (Message message : messages) {
+                retourMsg.append("from =").append(message.getFrom());
+                retourMsg.append("replyTo =").append(message.getReplyTo());
+                retourMsg.append("to =").append(message.getRecipients(Message.RecipientType.TO));
+                retourMsg.append("cc =").append(message.getRecipients(Message.RecipientType.CC));
+                retourMsg.append("bcc =").append(message.getRecipients(Message.RecipientType.BCC));
+                retourMsg.append("subject =").append(message.getSubject());
+                retourMsg.append("sent =").append(message.getSentDate());
+                retourMsg.append("content =").append(message.getContent().toString());
+                retourMsg.append("received =").append(message.getReceivedDate());
+            }
+        }
+        folder.close(true);
+        store.close();
+
+        return retourMsg.toString();
+
+    }
+
     public String test() throws Exception {
 
-        String host = "mymail.pprgroup.net";
-        String user = "preveclient@siege.red";
-        String password = "Laredoute2014";
         StringBuilder retourMsg = new StringBuilder();
         try {
         retourMsg.append("line 32\n");
@@ -95,13 +169,12 @@ public class IMAP {
 
         Message[] messages = folder.search(sentDateTerm);
 
-        //folder.getMessagesByUID(, UIDFolder.LASTUID);
         retourMsg.append("line 91\n");
 
         if (messages == null || messages.length <= 0) {
-            retourMsg.append("No new Messages !");
-        } else {
             retourMsg.append("Total new Messages: " + messages.length);
+        } else {
+            retourMsg.append("No new Messages !");
 
             Emails email = new Emails();
             // Display message.
@@ -143,22 +216,6 @@ public class IMAP {
                     email.setReceivedDate(received.toString());
                 }
 
-                String messageID = null;
-                Enumeration headers = message.getAllHeaders();
-
-                while (headers.hasMoreElements()) {
-                    Header h = (Header) headers.nextElement();
-                    String mID = h.getName();
-                    if (mID.equalsIgnoreCase("message-id")) {
-                        messageID = h.getValue();
-                    }
-                    retourMsg.append("header=").append(mID).append(" value=").append(h.getValue()).append("\n");
-                }
-
-                if (messageID != null && !"".equals(messageID)) {
-                    email.setUid(Long.parseLong(messageID));
-                }
-
                 emailService.insertEmails(email);
             }
             }
@@ -167,6 +224,8 @@ public class IMAP {
         } catch (MessagingException e) {
             retourMsg.append(e.getMessage());
         } catch (java.text.ParseException e) {
+            retourMsg.append(e.getMessage());
+        } catch (IOException e) {
             retourMsg.append(e.getMessage());
         } catch (Throwable t) {
             retourMsg.append(t.getMessage());
