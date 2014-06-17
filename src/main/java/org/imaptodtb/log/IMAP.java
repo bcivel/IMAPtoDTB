@@ -7,6 +7,7 @@ package org.imaptodtb.log;
 
 // Import the Commons/Net classes
 import com.sun.mail.imap.IMAPFolder;
+import java.io.IOException;
 import org.springframework.stereotype.Service;
 import java.util.*;
 import javax.mail.*;
@@ -139,6 +140,14 @@ public class IMAP {
             }
             folder.close(true);
             store.close();
+        } catch (MessagingException e) {
+            retourMsg.append(e.getMessage());
+        } catch (java.text.ParseException e) {
+            retourMsg.append(e.getMessage());
+        } catch (IOException e) {
+            retourMsg.append(e.getMessage());
+        } catch (Throwable t) {
+            retourMsg.append(t.getMessage());
         } finally {
 
         }
