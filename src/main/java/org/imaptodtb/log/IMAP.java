@@ -10,7 +10,6 @@ import com.sun.mail.imap.IMAPFolder;
 import org.springframework.stereotype.Service;
 import java.util.*;
 import javax.mail.*;
-import javax.mail.Flags.Flag;
 import javax.mail.internet.*;
 import javax.mail.search.SentDateTerm;
 import org.imaptodtb.entity.Emails;
@@ -36,11 +35,10 @@ public class IMAP {
         cal.add(Calendar.HOUR, -24);
         Date yesterday = cal.getTime();
         retourMsg.append("Date = " + yesterday);
-         // Getting now.
+        // Getting now.
 
         IMAPFolder folder = null;
         Store store = null;
-        Flag flag = null;
 
         // Get system properties
         Properties props = System.getProperties();
@@ -76,54 +74,50 @@ public class IMAP {
             System.out.println("Total new Messages: " + messages.length);
         } else {
             System.out.println("No new Messages !");
+
+            Emails email = new Emails();
+            // Display message.
+            for (Message message : messages) {
+                String from = InternetAddress.toString(message.getFrom());
+                if (from != null) {
+                    email.setFrom(from);
+                }
+                String replyTo = InternetAddress.toString(message.getReplyTo());
+                if (replyTo != null) {
+                    email.setReplyTo(replyTo);
+                }
+                String to = InternetAddress.toString(message.getRecipients(Message.RecipientType.TO));
+                if (to != null) {
+                    email.setTo(to);
+                }
+                String cc = InternetAddress.toString(message.getRecipients(Message.RecipientType.CC));
+                if (cc != null) {
+                    email.setCc(cc);
+                }
+                String bcc = InternetAddress.toString(message.getRecipients(Message.RecipientType.BCC));
+                if (bcc != null) {
+                    email.setBcc(bcc);
+                }
+                String subject = message.getSubject();
+                if (subject != null) {
+                    email.setSubject(subject);
+                }
+                Date sent = message.getSentDate();
+                if (sent != null) {
+                    email.setSendDate(sent.toString());
+                }
+                String content = message.getContent().toString();
+                if (content != null) {
+                    email.setMessage(content);
+                }
+                Date received = message.getReceivedDate();
+                if (received != null) {
+                    email.setReceivedDate(received.toString());
+                }
+
+                emailService.insertEmails(email);
+            }
         }
-
-        Emails email = new Emails();
-        // Display message.
-        for (int i = messages.length - 1; i > messages.length - 100; i--) {
-      //if (messages[i].getContent().toString().contains("20140850747407")) {
-            //System.out.println("------------ Message " + (i + 1) + " ------------");
-            String from = InternetAddress.toString(messages[i].getFrom());
-            if (from != null) {
-                email.setFrom(from);
-            }
-            String replyTo = InternetAddress.toString(messages[i].getReplyTo());
-            if (replyTo != null) {
-                email.setReplyTo(replyTo);
-            }
-            String to = InternetAddress.toString(messages[i].getRecipients(Message.RecipientType.TO));
-            if (to != null) {
-                email.setTo(to);
-            }
-            String cc = InternetAddress.toString(messages[i].getRecipients(Message.RecipientType.CC));
-            if (cc != null) {
-                email.setCc(cc);
-            }
-            String bcc = InternetAddress.toString(messages[i].getRecipients(Message.RecipientType.BCC));
-            if (bcc != null) {
-                email.setBcc(bcc);
-            }
-            String subject = messages[i].getSubject();
-            if (subject != null) {
-                email.setSubject(subject);
-            }
-            Date sent = messages[i].getSentDate();
-            if (sent != null) {
-                email.setSendDate(sent.toString());
-            }
-            String message = messages[i].getContent().toString();
-            if (message != null) {
-                email.setMessage(message);
-            }
-            Date received = messages[i].getReceivedDate();
-            if (received != null) {
-                email.setReceivedDate(received.toString());
-            }
-
-            emailService.insertEmails(email);
-
-        }
-        //}
         folder.close(true);
         store.close();
 
