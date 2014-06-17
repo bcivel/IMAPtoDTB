@@ -60,7 +60,7 @@ public class IMAP {
 
         /*
          int messageCount = folder.getMessageCount();
-         System.out.println("Total Messages:- " + messageCount);
+         retourMsg.append("Total Messages:- " + messageCount);
          // Get the messages from the server
          Message[] messages = folder.getMessages();
          */
@@ -71,9 +71,9 @@ public class IMAP {
 
         Message[] messages = folder.search(sentDateTerm);
         if (messages == null || messages.length <= 0) {
-            System.out.println("Total new Messages: " + messages.length);
+            retourMsg.append("Total new Messages: " + messages.length);
         } else {
-            System.out.println("No new Messages !");
+            retourMsg.append("No new Messages !");
 
             Emails email = new Emails();
             // Display message.
