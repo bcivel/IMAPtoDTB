@@ -28,6 +28,8 @@ public class IMAP {
         String user = "preveclient@siege.red";
         String password = "Laredoute2014";
         StringBuilder retourMsg = new StringBuilder();
+        try {
+        retourMsg.append("line 32\n");
 
         Date today = new Date();
         Calendar cal = Calendar.getInstance();
@@ -37,12 +39,16 @@ public class IMAP {
         retourMsg.append("Date = " + yesterday);
         // Getting now.
 
+        retourMsg.append("line 42\n");
+
         IMAPFolder folder = null;
         Store store = null;
 
         // Get system properties
         Properties props = System.getProperties();
         props.setProperty("mail.store.protocol", "imaps");
+
+        retourMsg.append("line 51\n");
 
         Session session = Session.getDefaultInstance(props, null);
 
@@ -52,8 +58,12 @@ public class IMAP {
         //Connect to the current host using the specified username and password.
         store.connect(host, user, password);
 
+        retourMsg.append("line 61\n");
+
         //Create a Folder object corresponding to the given name.
         folder = (IMAPFolder) store.getFolder("Inbox/Commande");
+
+        retourMsg.append("line 66\n");
 
         // Open the Folder.
         folder.open(Folder.READ_ONLY);
@@ -64,12 +74,21 @@ public class IMAP {
          // Get the messages from the server
          Message[] messages = folder.getMessages();
          */
+        retourMsg.append("line 78\n");
+
         MailDateFormat dateFormat = new MailDateFormat();
         Emails emails = emailService.getLastMessage();
 
+        retourMsg.append("line 83\n");
+
         SentDateTerm sentDateTerm = new SentDateTerm(SentDateTerm.GT, dateFormat.parse(emails.getSendDate()));
 
+        retourMsg.append("line 87\n");
+
         Message[] messages = folder.search(sentDateTerm);
+
+        retourMsg.append("line 91\n");
+
         if (messages == null || messages.length <= 0) {
             retourMsg.append("Total new Messages: " + messages.length);
         } else {
@@ -117,9 +136,12 @@ public class IMAP {
 
                 emailService.insertEmails(email);
             }
+            }
+            folder.close(true);
+            store.close();
+        } finally {
+
         }
-        folder.close(true);
-        store.close();
 
         return retourMsg.toString();
     }
