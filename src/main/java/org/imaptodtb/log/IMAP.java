@@ -99,9 +99,9 @@ public class IMAP {
         retourMsg.append("line 91\n");
 
         if (messages == null || messages.length <= 0) {
-            retourMsg.append("Total new Messages: " + messages.length);
-        } else {
             retourMsg.append("No new Messages !");
+        } else {
+            retourMsg.append("Total new Messages: " + messages.length);
 
             Emails email = new Emails();
             // Display message.
@@ -154,7 +154,7 @@ public class IMAP {
                     }
                 }
 
-                if (messageID != null) {
+                if (messageID != null && !"".equals(messageID)) {
                     email.setUid(Long.parseLong(messageID));
                 }
 
