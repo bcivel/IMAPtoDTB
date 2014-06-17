@@ -11,9 +11,17 @@
         <servlet-name>TestPop</servlet-name>
         <servlet-class>org.imaptodtb.servlet.TestPop</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SearchMessage</servlet-name>
+        <servlet-class>org.imaptodtb.servlet.SearchMessage</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>TestPop</servlet-name>
         <url-pattern>/TestPop</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchMessage</servlet-name>
+        <url-pattern>/SearchMessage</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
