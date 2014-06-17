@@ -46,7 +46,9 @@ public class TestPop extends HttpServlet {
             IMAP sample = appContext.getBean(IMAP.class);
 
             out.append(sample.test());
-                    
+        } catch (Exception ex) {
+            out.append("<br>Exception: <br><br>");
+            out.append(ex.getMessage());
         } finally {
             out.append("<h4>END !</h4></body></html>");
             out.close();
