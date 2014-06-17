@@ -37,13 +37,18 @@ public class TestPop extends HttpServlet {
             throws ServletException, IOException, Exception {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
+
+        out.append("<html><head><title>Test POP</title></head>");
+        out.append("<body><h1>Test Pop Servlet</h1>");
+
         try {
             ApplicationContext appContext = WebApplicationContextUtils.getWebApplicationContext(this.getServletContext());
             IMAP sample = appContext.getBean(IMAP.class);
 
-            out.println(sample.test());
+            out.append(sample.test());
                     
         } finally {
+            out.append("<h4>END !</h4></body></html>");
             out.close();
         }
     }
