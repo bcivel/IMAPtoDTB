@@ -8,6 +8,7 @@ package org.imaptodtb.log;
 // Import the Commons/Net classes
 import com.sun.mail.imap.IMAPFolder;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import org.springframework.stereotype.Service;
 import java.util.*;
 import javax.mail.*;
@@ -77,12 +78,15 @@ public class IMAP {
          */
         retourMsg.append("line 78\n");
 
-        MailDateFormat dateFormat = new MailDateFormat();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM d HH:mm:ss Z yyyy");
         Emails emails = emailService.getLastMessage();
 
         retourMsg.append("line 83\n");
 
-            retourMsg.append("Time=").append(dateFormat.parse(emails.getSendDate()).getTime()).append("\n");
+        retourMsg.append("DateMail=").append(emails.getSendDate()).append("\n");
+        retourMsg.append("Time=").append(emails.getSendDate()).append("\n");
+
+        retourMsg.append("Time=").append(dateFormat.parse(emails.getSendDate()).getTime()).append("\n");
 
         SentDateTerm sentDateTerm = new SentDateTerm(SentDateTerm.GT, dateFormat.parse(emails.getSendDate()));
 
