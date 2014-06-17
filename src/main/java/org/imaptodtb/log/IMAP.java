@@ -82,7 +82,13 @@ public class IMAP {
 
         retourMsg.append("line 83\n");
 
+            retourMsg.append("Time=").append(dateFormat.parse(emails.getSendDate()).getTime()).append("\n");
+
         SentDateTerm sentDateTerm = new SentDateTerm(SentDateTerm.GT, dateFormat.parse(emails.getSendDate()));
+
+        if (sentDateTerm == null) {
+            retourMsg.append("ERROR sentDateTerm NULL !!\n");
+        }
 
         retourMsg.append("line 87\n");
 
