@@ -151,9 +151,8 @@ public class IMAP {
                     String mID = h.getName();
                     if (mID.equalsIgnoreCase("message-id")) {
                         messageID = h.getValue();
-                    } else {
-                        retourMsg.append("header=").append(mID).append("\n");
                     }
+                    retourMsg.append("header=").append(mID).append(" value=").append(h.getValue()).append("\n");
                 }
 
                 if (messageID != null && !"".equals(messageID)) {
