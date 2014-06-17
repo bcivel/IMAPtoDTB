@@ -15,4 +15,6 @@ import org.imaptodtb.entity.Emails;
 public interface IEmailsService {
     
     void insertEmails(Emails email);
+    
+    Emails getLastMessage();
 }

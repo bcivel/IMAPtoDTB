@@ -26,5 +26,10 @@ public class EmailsService implements IEmailsService {
     public void insertEmails(Emails email) {
         emailsDao.insertEmails(email);
     }
+
+    @Override
+    public Emails getLastMessage() {
+        return emailsDao.getLastMessage();
+    }
     
 }

@@ -8,6 +8,7 @@ package org.imaptodtb.dao.impl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.apache.log4j.Level;
 import org.imaptodtb.dao.IEmailsDAO;
@@ -65,5 +66,62 @@ public class EmailsDAO implements IEmailsDAO {
                 Logger.log(EmailsDAO.class.getName(), Level.WARN, e.toString());
             }
         }}
+
+    @Override
+    public Emails getLastMessage() {
+        boolean throwExcep = false;
+        Emails result = null;
+        final String query = "SELECT * FROM emails order by id desc limit 1";
+
+        Connection connection = this.databaseSpring.connect();
+        try {
+            PreparedStatement preStat = connection.prepareStatement(query);
+            try {
+                
+                ResultSet resultSet = preStat.executeQuery();
+                try {
+                    if (resultSet.first()) {
+                        result = this.loadMessage(resultSet);
+                    } 
+                } catch (SQLException exception) {
+                    Logger.log(EmailsDAO.class.getName(), Level.ERROR, exception.toString());
+                } finally {
+                    resultSet.close();
+                }
+            } catch (SQLException exception) {
+                Logger.log(EmailsDAO.class.getName(), Level.ERROR, exception.toString());
+            } finally {
+                preStat.close();
+            }
+        } catch (SQLException exception) {
+            Logger.log(EmailsDAO.class.getName(), Level.ERROR, exception.toString());
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                Logger.log(EmailsDAO.class.getName(), Level.ERROR, e.toString());
+            }
+        }
+        
+        return result;
+    }
+    
+    private Emails loadMessage(ResultSet resultSet) throws SQLException {
+        Emails email = new Emails();
+        email.setId(resultSet.getInt("id"));
+        email.setFrom(resultSet.getString("from"));
+        email.setReplyTo(resultSet.getString("replyto"));
+        email.setTo(resultSet.getString("to"));
+        email.setCc(resultSet.getString("cc"));
+        email.setBcc(resultSet.getString("bcc"));
+        email.setSubject(resultSet.getString("subject"));
+        email.setSendDate(resultSet.getString("senddate"));
+        email.setMessage(resultSet.getString("message"));
+        email.setReceivedDate(resultSet.getString("receiveddate"));
+
+        return email;
+    }
     
 }
