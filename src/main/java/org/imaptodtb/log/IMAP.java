@@ -149,8 +149,10 @@ public class IMAP {
                 while (headers.hasMoreElements()) {
                     Header h = (Header) headers.nextElement();
                     String mID = h.getName();
-                    if (mID.contains("Message-ID") || mID.contains("Message-Id")) {
+                    if (mID.equalsIgnoreCase("message-id")) {
                         messageID = h.getValue();
+                    } else {
+                        retourMsg.append("header=").append(mID).append("\n");
                     }
                 }
 
