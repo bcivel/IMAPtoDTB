@@ -42,8 +42,11 @@ public class TestPop extends HttpServlet {
         out.append("<body><h1>Test Pop Servlet</h1>");
 
         try {
+            out.append("<br>1<br><br>");
             ApplicationContext appContext = WebApplicationContextUtils.getWebApplicationContext(this.getServletContext());
+            out.append("<br>2<br><br>");
             IMAP sample = appContext.getBean(IMAP.class);
+            out.append("<br>3<br><br>");
 
             out.append(sample.test());
         } catch (Exception ex) {
