@@ -49,7 +49,7 @@ public class SearchMessage extends HttpServlet {
             String searchTerm = request.getParameter("search");
             if (searchTerm != null && !"".equals(searchTerm.trim())) {
                 IMAP imap = new IMAP();
-                imap.retrieveMailFromSearch(searchTerm);
+                out.println(imap.retrieveMailFromSearch(searchTerm));
             } else {
                 out.println("<h1>ERROR YOU MUST SPECIFY A SEARCH TERM !!</h1>");
             }
