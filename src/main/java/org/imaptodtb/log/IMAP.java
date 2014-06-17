@@ -7,7 +7,6 @@ package org.imaptodtb.log;
 
 // Import the Commons/Net classes
 import com.sun.mail.imap.IMAPFolder;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import org.springframework.stereotype.Service;
 import java.util.*;
@@ -96,6 +95,7 @@ public class IMAP {
 
         Message[] messages = folder.search(sentDateTerm);
 
+        //folder.getMessagesByUID(, UIDFolder.LASTUID);
         retourMsg.append("line 91\n");
 
         if (messages == null || messages.length <= 0) {
@@ -143,6 +143,21 @@ public class IMAP {
                     email.setReceivedDate(received.toString());
                 }
 
+                String messageID = null;
+                Enumeration headers = message.getAllHeaders();
+
+                while (headers.hasMoreElements()) {
+                    Header h = (Header) headers.nextElement();
+                    String mID = h.getName();
+                    if (mID.contains("Message-ID") || mID.contains("Message-Id")) {
+                        messageID = h.getValue();
+                    }
+                }
+
+                if (messageID != null) {
+                    email.setUid(Long.parseLong(messageID));
+                }
+
                 emailService.insertEmails(email);
             }
             }
@@ -151,8 +166,6 @@ public class IMAP {
         } catch (MessagingException e) {
             retourMsg.append(e.getMessage());
         } catch (java.text.ParseException e) {
-            retourMsg.append(e.getMessage());
-        } catch (IOException e) {
             retourMsg.append(e.getMessage());
         } catch (Throwable t) {
             retourMsg.append(t.getMessage());
