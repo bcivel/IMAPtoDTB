@@ -78,7 +78,7 @@ public class IMAP {
          */
         retourMsg.append("line 78\n");
 
-            SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzzz yyyy");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM d HH:mm:ss z yyyy", Locale.US);
         Emails emails = emailService.getLastMessage();
 
         retourMsg.append("line 83\n");
