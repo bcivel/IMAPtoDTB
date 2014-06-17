@@ -38,29 +38,29 @@ public class SearchMessage extends HttpServlet {
         PrintWriter out = response.getWriter();
         try {
 
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet SearchMessage</title>");
-            out.println("</head>");
-            out.println("<body>");
-
             String searchTerm = request.getParameter("search");
-            if (searchTerm != null && !"".equals(searchTerm.trim())) {
+            String folderName = request.getParameter("folder");
+            if (searchTerm != null && !"".equals(searchTerm.trim()) && folderName != null && !"".equals(folderName.trim())) {
                 IMAP imap = new IMAP();
-                out.println(imap.retrieveMailFromSearch(searchTerm));
+                out.println(imap.retrieveMailFromSearch(searchTerm, folderName));
             } else {
+                out.println("<!DOCTYPE html>");
+                out.println("<html>");
+                out.println("<head>");
+                out.println("<title>Servlet SearchMessage</title>");
+                out.println("</head>");
+                out.println("<body>");
                 out.println("<h1>ERROR YOU MUST SPECIFY A SEARCH TERM !!</h1>");
+                out.println("<h1>ERROR YOU MUST SPECIFY A FOLDER !!</h1>");
             }
 
         } catch (Exception ex) {
             out.println("<h1>Servlet ISSUE " + ex.getMessage() + "</h1>");
             Logger.getLogger(SearchMessage.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
             out.println("<h1>Servlet SearchMessage at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
+        } finally {
             out.close();
         }
     }

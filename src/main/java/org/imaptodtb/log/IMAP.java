@@ -29,7 +29,7 @@ public class IMAP {
     private final String user = "preveclient@siege.red";
     private final String password = "Laredoute2014";
 
-    public String retrieveMailFromSearch(String search)
+    public String retrieveMailFromSearch(String search, String folderName)
             throws Exception {
         StringBuilder retourMsg = new StringBuilder();
 
@@ -40,7 +40,7 @@ public class IMAP {
         Properties props = System.getProperties();
         props.setProperty("mail.store.protocol", "imaps");
 
-        retourMsg.append("line 51\n");
+        //retourMsg.append("line 51\n");
 
         Session session = Session.getDefaultInstance(props, null);
 
@@ -50,12 +50,12 @@ public class IMAP {
         //Connect to the current host using the specified username and password.
         store.connect(host, user, password);
 
-        retourMsg.append("line 61\n");
+        //retourMsg.append("line 61\n");
 
         //Create a Folder object corresponding to the given name.
-        folder = (IMAPFolder) store.getFolder("Inbox/Commande");
+        folder = (IMAPFolder) store.getFolder("Inbox/" + folderName);
 
-        retourMsg.append("line 66\n");
+        //retourMsg.append("line 66\n");
 
         // Open the Folder.
         folder.open(Folder.READ_ONLY);
@@ -66,31 +66,34 @@ public class IMAP {
          // Get the messages from the server
          Message[] messages = folder.getMessages();
          */
-        retourMsg.append("line 78\n");
+        //retourMsg.append("line 78\n");
 
         BodyTerm bodyTerm = new BodyTerm(search);
 
         Message[] messages = folder.search(bodyTerm);
 
-        retourMsg.append("line 91\n");
+        //retourMsg.append("line 91\n");
 
         if (messages == null || messages.length <= 0) {
-            retourMsg.append("Total new Messages: " + messages.length);
+            retourMsg.append("NO MESSAGE FOUND");
         } else {
-            retourMsg.append("No new Messages !");
+            //retourMsg.append("No new Messages !");
 
-            Emails email = new Emails();
             // Display message.
             for (Message message : messages) {
-                retourMsg.append("from =").append(message.getFrom());
+                /*
+                 retourMsg.append("from =").append(message.getFrom());
                 retourMsg.append("replyTo =").append(message.getReplyTo());
                 retourMsg.append("to =").append(message.getRecipients(Message.RecipientType.TO));
                 retourMsg.append("cc =").append(message.getRecipients(Message.RecipientType.CC));
                 retourMsg.append("bcc =").append(message.getRecipients(Message.RecipientType.BCC));
                 retourMsg.append("subject =").append(message.getSubject());
                 retourMsg.append("sent =").append(message.getSentDate());
-                retourMsg.append("content =").append(message.getContent().toString());
-                retourMsg.append("received =").append(message.getReceivedDate());
+                 retourMsg.append("content =");
+                 */
+                retourMsg.append(message.getContent().toString());
+
+                //retourMsg.append("received =").append(message.getReceivedDate());
             }
         }
         folder.close(true);
