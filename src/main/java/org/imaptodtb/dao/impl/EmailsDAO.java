@@ -31,8 +31,8 @@ public class EmailsDAO implements IEmailsDAO {
     @Override
     public void insertEmails(Emails emails) {
         StringBuilder query = new StringBuilder();
-        query.append("INSERT INTO emails (`id`,`from`,`replyto`,`to`,`cc`, `bcc`, `subject`, `sendDate`, `message`, `receiveddate`) ");
-        query.append("VALUES (0,?,?,?,?,?,?,?,?,?)");
+        query.append("INSERT INTO emails (`id`,`from`,`replyto`,`to`,`cc`, `bcc`, `subject`, `sendDate`, `message`, `receiveddate`, `uid`) ");
+        query.append("VALUES (0,?,?,?,?,?,?,?,?,?,?)");
 
         Connection connection = this.databaseSpring.connect();
         try {
@@ -47,6 +47,7 @@ public class EmailsDAO implements IEmailsDAO {
                 preStat.setString(7, emails.getSendDate());
                 preStat.setString(8, emails.getMessage());
                 preStat.setString(9, emails.getReceivedDate());
+                preStat.setLong(10, emails.getUid());
 
                 preStat.executeUpdate();
 
@@ -120,6 +121,7 @@ public class EmailsDAO implements IEmailsDAO {
         email.setSendDate(resultSet.getString("senddate"));
         email.setMessage(resultSet.getString("message"));
         email.setReceivedDate(resultSet.getString("receiveddate"));
+        email.setUid(resultSet.getLong("uid"));
 
         return email;
     }

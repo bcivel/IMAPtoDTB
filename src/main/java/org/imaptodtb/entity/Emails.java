@@ -21,7 +21,16 @@ public class Emails {
     String sendDate;
     String message;
     String receivedDate;
+    long uid;
 
+    public long getUid() {
+        return uid;
+    }
+
+    public void setUid(long uid) {
+        this.uid = uid;
+    }
+    
     public int getId() {
         return id;
     }
