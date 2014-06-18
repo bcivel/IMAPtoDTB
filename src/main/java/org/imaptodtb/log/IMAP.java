@@ -26,12 +26,18 @@ public class IMAP {
     IEmailsService emailService;
 
     private final String host = "mymail.pprgroup.net";
-    private final String user = "preveclient@siege.red";
-    private final String password = "Laredoute2014";
 
-    public String retrieveMailFromSearch(String search, String folderName)
+    public String retrieveMailFromSearch(String search, String folderName, String user, String password)
             throws Exception {
         StringBuilder retourMsg = new StringBuilder();
+
+        if (user == null || "".equals(user.trim())) {
+            user = "preveclire7fonc@siege.red";
+        }
+
+        if (password == null || "".equals(password.trim())) {
+            password = "Laredoute2014";
+        }
 
         IMAPFolder folder = null;
         Store store = null;
@@ -104,6 +110,9 @@ public class IMAP {
     }
 
     public String test() throws Exception {
+
+        String user = "preveclient@siege.red";
+        String password = "Laredoute2014";
 
         StringBuilder retourMsg = new StringBuilder();
         try {

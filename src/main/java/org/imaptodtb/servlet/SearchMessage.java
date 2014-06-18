@@ -40,9 +40,11 @@ public class SearchMessage extends HttpServlet {
 
             String searchTerm = request.getParameter("search");
             String folderName = request.getParameter("folder");
+            String user = request.getParameter("user");
+            String password = request.getParameter("password");
             if (searchTerm != null && !"".equals(searchTerm.trim()) && folderName != null && !"".equals(folderName.trim())) {
                 IMAP imap = new IMAP();
-                out.println(imap.retrieveMailFromSearch(searchTerm, folderName));
+                out.println(imap.retrieveMailFromSearch(searchTerm, folderName, user, password));
             } else {
                 out.println("<!DOCTYPE html>");
                 out.println("<html>");
