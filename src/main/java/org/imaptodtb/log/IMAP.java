@@ -26,6 +26,8 @@ public class IMAP {
     IEmailsService emailService;
 
     private final String host = "mymail.pprgroup.net";
+    //private final String host = "172.25.64.170";
+
 
     public String retrieveMailFromSearch(String search, String folderName, String user, String password)
             throws Exception {
@@ -51,7 +53,7 @@ public class IMAP {
         Session session = Session.getDefaultInstance(props, null);
 
         // Get a Store object that implements the specified protocol.
-        store = session.getStore("imaps");
+        store = session.getStore("imap");
 
         //Connect to the current host using the specified username and password.
         store.connect(host, user, password);
