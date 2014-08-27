@@ -44,7 +44,7 @@ public class IMAP {
 
         // Get system properties
         Properties props = System.getProperties();
-        props.setProperty("mail.store.protocol", "imaps");
+        props.setProperty("mail.store.protocol", "imap");
 
         //retourMsg.append("line 51\n");
 
